@@ -1,0 +1,5 @@
+const BottomBar = () => {
+    return <div className="footer"> - Menu Inferior - </div>
+}
+
+export default BottomBar

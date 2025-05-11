@@ -1,0 +1,45 @@
+import { AddBox, UsbOffSharp, UsbRounded } from "@mui/icons-material";
+import { Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
+import useNavegacaoStore from "../../../../store/navegacao/useNavegacaoStore";
+
+const LeftBar = () => {
+  const { menu } = useNavegacaoStore();
+
+  const DrawerList = (
+    <Box sx={{ width: 250 }} role="presentation" onClick={() => menu.menuEsquerdo.toogle()}>
+      <List>
+        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                {index % 2 === 0 ? <AddBox /> : <AddBox />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {['All mail', 'Trash', 'Spam'].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                {index % 2 === 0 ? <UsbRounded /> : <UsbOffSharp />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
+  return <>
+    <Drawer open={menu.menuEsquerdo.get} onClose={() => menu.menuEsquerdo.close()}>
+      {DrawerList}
+    </Drawer>
+  </>
+}
+
+export default LeftBar

@@ -1,0 +1,172 @@
+Arquitetura da Plataforma de Teste de PoC de CVEs
+Esta plataforma visa simplificar e automatizar o processo de teste de Provas de Conceito (PoCs) para vulnerabilidades (CVEs) publicadas, utilizando contêineres Docker para criar ambientes de teste isolados e reproduzíveis.
+
+Fluxo Geral do Sistema:
+Coleta de CVEs Candidatas:
+
+Uma rotina automatizada (script Python) varre periodicamente o site Exploit-DB em busca de novas CVEs que possuam exploits documentados.
+
+As CVEs identificadas são armazenadas em um banco de dados interno como "CVEs candidatas", aguardando a preparação da PoC.
+
+Seleção e Preparação da PoC:
+
+Através da interface do usuário (UI), um administrador ou usuário com permissão seleciona uma CVE da lista de candidatas.
+
+Ao selecionar, o sistema inicia o processo de preparação:
+
+Coleta de Informações:
+
+Busca detalhes adicionais sobre a CVE no Exploit-DB (descrição, tipo de vulnerabilidade, software afetado, versões, etc.).
+
+Busca no GitHub por repositórios que contenham a PoC para a CVE selecionada. Assume-se que os arquivos relevantes do projeto GitHub são baixados para um diretório local (ex: ./projetos/[nome-projeto-github]).
+
+Interação com LLM (OpenAI API):
+
+As informações coletadas (detalhes da CVE, código da PoC do GitHub, estrutura de diretórios local) são enviadas para um Large Language Model (LLM) através da API da OpenAI.
+
+A solicitação à LLM inclui:
+
+Um prompt claro para analisar o material e identificar todas as dependências, configurações de ambiente e passos necessários para executar a PoC.
+
+Instrução para gerar um arquivo docker-compose.yml que defina os serviços, redes e volumes necessários para o ambiente da PoC.
+
+Instrução para gerar um script shell (test_poc.sh) que automatize a execução da PoC dentro do ambiente Docker. Este script deve considerar que os arquivos da PoC (do GitHub) estão disponíveis localmente em ./projetos/[nome-projeto-github] e serão montados no(s) contêiner(es).
+
+Especificação de um formato de saída estruturado para os arquivos gerados (ex: JSON contendo o conteúdo do docker-compose.yml e do test_poc.sh).
+
+Geração dos Arquivos da PoC:
+
+O sistema recebe a resposta estruturada da LLM.
+
+Com base nessa resposta, cria os seguintes arquivos em um diretório específico para a CVE (ex: ./cve/[nome-da-cve]/):
+
+docker-compose.yml
+
+test_poc.sh
+
+(Opcional) Um arquivo README.md com instruções ou notas adicionais geradas pela LLM.
+
+Disponibilização e Teste na UI:
+
+A CVE, agora com a PoC preparada, é listada na UI principal como "pronta para teste".
+
+Ao selecionar uma CVE pronta:
+
+A UI exibe informações sobre a CVE e a PoC.
+
+Oferece um botão para "Iniciar Ambiente Docker" (que executaria docker-compose up -d no backend, no diretório ./cve/[nome-da-cve]/).
+
+Apresenta uma seção de "Terminal" (simulada ou integrada) que:
+
+Mostra que o usuário está no contexto do diretório ./cve/[nome-da-cve]/.
+
+Exibe um mini tutorial com os comandos a serem executados para rodar o script de teste (ex: docker-compose exec [nome-do-servico-principal] /bin/bash, seguido de ./test_poc.sh).
+
+Permite ao usuário interagir e observar os resultados.
+
+Componentes Detalhados:
+1. Interface do Usuário (UI)
+Tecnologias: Pode ser desenvolvida com HTML, CSS, JavaScript e um framework como React, Vue.js ou Angular.
+
+Funcionalidades:
+
+Listagem de CVEs (com status: candidata, preparando, pronta para teste, testada).
+
+Filtros e busca de CVEs.
+
+Visualização detalhada de uma CVE (informações, arquivos gerados).
+
+Botão para iniciar a preparação de PoC para CVEs candidatas.
+
+Botão para "subir" o ambiente Docker para CVEs prontas.
+
+Exibição de um terminal simulado ou integrado.
+
+Mini tutorial contextual para execução da PoC.
+
+2. Rotina de Coleta de CVEs (Backend)
+Tecnologias: Python com bibliotecas como requests (para requisições HTTP) e BeautifulSoup ou Scrapy (para web scraping do Exploit-DB).
+
+Lógica:
+
+Acessar a página de busca do Exploit-DB (ou usar sua API, se disponível e adequada).
+
+Filtrar por exploits que tenham CVEs associadas.
+
+Extrair informações relevantes (ID da CVE, título do exploit, link para o exploit).
+
+Verificar se a CVE já existe no banco de dados local.
+
+Se não existir, adicionar à lista de "CVEs candidatas".
+
+Agendamento: Pode ser executada como um cron job ou tarefa agendada.
+
+3. Ação de Preparação da PoC (Backend)
+Tecnologias: Python, bibliotecas para interagir com APIs (GitHub API, OpenAI API).
+
+Lógica:
+
+Receber ID da CVE da UI.
+
+Buscar no Exploit-DB: Obter detalhes da CVE.
+
+Buscar no GitHub:
+
+Utilizar a API do GitHub para buscar repositórios relacionados à CVE (ex: search/repositories?q=CVE-XXXX-XXXXX+poc).
+
+Clonar ou baixar o(s) repositório(s) mais relevante(s) para ./projetos/[nome-projeto-github]. (É importante ter uma estratégia para selecionar o melhor repositório ou permitir que o usuário selecione/informe).
+
+Construir Prompt para LLM:
+
+Incluir descrição da CVE.
+
+Informar a estrutura de arquivos do projeto GitHub baixado (ex: ls -R ./projetos/[nome-projeto-github]).
+
+Solicitar docker-compose.yml e test_poc.sh, especificando que o script deve usar os arquivos em ./projetos/[nome-projeto-github] (que seriam montados via volume no Docker).
+
+Exemplo de estrutura de retorno esperada (JSON):
+
+{
+  "docker_compose_yaml": "conteúdo do docker-compose.yml aqui...",
+  "shell_script_poc": "conteúdo do test_poc.sh aqui...",
+  "readme_notes": "Instruções adicionais ou notas importantes aqui..."
+}
+
+Chamar API da OpenAI: Enviar o prompt.
+
+Processar Resposta da LLM:
+
+Extrair o docker-compose.yml e o test_poc.sh da resposta.
+
+Salvar os arquivos em ./cve/[nome-da-cve]/.
+
+Atualizar Status da CVE: Marcar como "pronta para teste".
+
+4. Execução e Gerenciamento do Ambiente Docker (Backend/Infra)
+Tecnologias: Docker, Docker Compose.
+
+Lógica:
+
+Quando o usuário clica em "Iniciar Ambiente Docker":
+
+O backend executa o comando docker-compose -f ./cve/[nome-da-cve]/docker-compose.yml up -d.
+
+Retorna o status para a UI.
+
+A UI pode então guiar o usuário a usar docker exec para rodar o script test_poc.sh ou, idealmente, o backend poderia fornecer um endpoint que executa o script dentro do contêiner e retorna o output para a UI.
+
+Considerações Adicionais:
+Segurança: Executar PoCs, mesmo em ambientes Docker, carrega riscos. É crucial garantir que a plataforma e os ambientes Docker estejam devidamente isolados e que não haja risco de escape de contêineres ou comprometimento do host.
+
+Gerenciamento de Recursos: Controlar o consumo de recursos pelos contêineres Docker.
+
+Banco de Dados: Para armazenar informações sobre CVEs, status, caminhos dos arquivos, etc. (SQLite, PostgreSQL, MongoDB).
+
+Autenticação e Autorização: Definir quem pode adicionar CVEs, preparar PoCs e executar testes.
+
+Tratamento de Erros e Logging: Essencial para depuração e monitoramento.
+
+Complexidade das PoCs: Algumas PoCs podem ser muito complexas, exigindo múltiplos serviços, 
+configurações de rede específicas ou interação do usuário. 
+A capacidade da LLM de gerar docker-compose.yml e scripts precisos para esses casos será um fator chave.
+Pode ser necessário um processo iterativo ou intervenção manual para PoCs mais complexas.
