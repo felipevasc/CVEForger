@@ -1,35 +1,31 @@
-import { AppBar, Avatar, Box, Divider, ListItemIcon, Menu, MenuItem, Tab, Tabs } from "@mui/material"
-import useNavegacaoStore from "../../../../store/navegacao/useNavegacaoStore"
-import { Logout, PersonAdd, Settings } from "@mui/icons-material"
-import { useRef, useState } from "react"
+import { AppBar, Box, Tab, Tabs } from '@mui/material';
+import { useState } from 'react';
 
 const TopBar = () => {
-    const [value, setValue] = useState(0);
+  const [value, setValue] = useState(0);
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
-    };
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
 
-    return <>
+  return (
+    <Box sx={{ bgcolor: 'background.paper', width: '100%', boxShadow: 'none' }}>
+      <AppBar position='static' color='warning' style={{ boxShadow: 'none' }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          indicatorColor='secondary'
+          textColor='inherit'
+          variant='fullWidth'
+          aria-label='full width tabs example'>
+          <Tab label='Realizar POC' />
+          <Tab label='Buscar CVE' />
+          <Tab label='Implementar CVE' />
+          <Tab label='Montar POC' />
+        </Tabs>
+      </AppBar>
+    </Box>
+  );
+};
 
-        <Box sx={{ bgcolor: 'background.paper', width: '100%', }}>
-            <AppBar position="static">
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    indicatorColor="secondary"
-                    textColor="inherit"
-                    variant="fullWidth"
-                    aria-label="full width tabs example"
-                >
-                    <Tab label="Item One" />
-                    <Tab label="Item Two" />
-                    <Tab label="Item Three" />
-                    <Tab label="Item FOR" />
-                </Tabs>
-            </AppBar>
-        </Box>
-    </>
-}
-
-export default TopBar
+export default TopBar;

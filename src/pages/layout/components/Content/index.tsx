@@ -1,5 +1,11 @@
-const Content = () => {
-    return <div className="content"> - Conteudo - </div>
-}
+import Desconhecidas from '../../../features/cve/Desconhecidas';
 
-export default Content
+const Content = () => {
+  return (
+    <div className='content'>
+      <Desconhecidas />
+    </div>
+  );
+};
+
+export default Content;

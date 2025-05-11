@@ -66,7 +66,7 @@ Permite ao usuário interagir e observar os resultados.
 
 Componentes Detalhados:
 1. Interface do Usuário (UI)
-Tecnologias: Pode ser desenvolvida com HTML, CSS, JavaScript e um framework como React, Vue.js ou Angular.
+Tecnologias: Pode ser desenvolvida com HTML, CSS, JavaScript e um framework como React.
 
 Funcionalidades:
 

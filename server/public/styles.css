@@ -1,0 +1,85 @@
+/* public/estilo.css */
+body {
+  font-family: sans-serif;
+  margin: 20px;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1,
+h2 {
+  color: #0056b3;
+}
+
+input[type='text'] {
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.conexao,
+.secao-teste {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+.conexao:last-child,
+.secao-teste:last-child {
+  border-bottom: none;
+}
+
+#statusConexao.conectado {
+  color: green;
+  font-weight: bold;
+}
+
+#statusConexao.desconectado {
+  color: red;
+  font-weight: bold;
+}
+
+.log {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  background-color: #e9ecef;
+  height: 200px;
+  overflow-y: auto;
+  border-radius: 4px;
+}
+
+.log p {
+  margin: 5px 0;
+  padding: 3px;
+  border-bottom: 1px dotted #ccc;
+}
+.log p:last-child {
+  border-bottom: none;
+}

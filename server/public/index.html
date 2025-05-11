@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cliente WebSocket de Teste</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>Teste de WebSocket</h1>
+
+    <div class="container">
+      <div class="conexao">
+        <label for="wsUrl">URL do WebSocket:</label>
+        <input type="text" id="wsUrl" value="ws://localhost:3000" />
+        <button id="conectarWs">Conectar</button>
+        <button id="desconectarWs" disabled>Desconectar</button>
+        <p>Status: <span id="statusConexao">Desconectado</span></p>
+      </div>
+
+      <hr />
+
+      <div class="secao-teste">
+        <h2>Teste de Ping/Pong</h2>
+        <input type="text" id="pingInput" placeholder="Dados para o ping" />
+        <button id="enviarPing" disabled>Enviar Ping</button>
+      </div>
+
+      <hr />
+
+      <div class="secao-teste">
+        <h2>Teste de Chat Simples</h2>
+        <input type="text" id="nomeUsuario" placeholder="Seu nome" />
+        <input
+          type="text"
+          id="mensagemInput"
+          placeholder="Digite sua mensagem" />
+        <button id="enviarMensagem" disabled>Enviar Mensagem</button>
+      </div>
+
+      <hr />
+
+      <h2>Log de Mensagens do Servidor:</h2>
+      <div id="logMensagens" class="log"></div>
+    </div>
+
+    <script src="cliente-websocket.js"></script>
+  </body>
+</html>
