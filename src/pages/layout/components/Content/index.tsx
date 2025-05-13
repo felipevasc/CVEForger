@@ -1,4 +1,4 @@
-import Desconhecidas from '../../../features/cve/Desconhecidas';
+import Desconhecidas from '../../../features/cve/Desconhecidas/index';
 
 const Content = () => {
   return (
