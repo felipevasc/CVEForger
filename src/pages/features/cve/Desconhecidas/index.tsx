@@ -16,7 +16,7 @@ const Desconhecidas: React.FC = () => {
 
   // Define Mock Platforms:
   const MOCK_PLATFORMS = useMemo(
-    () => ['windows', 'linux', 'macos', 'android', 'ios', 'network gear'],
+    () => ['multiple', 'windows', 'linux', 'macos', 'android', 'ios', 'php', 'python', 'java', 'hardware', 'typescript'],
     []
   ); // Updated to lowercase
 
@@ -65,8 +65,6 @@ const Desconhecidas: React.FC = () => {
       return []; // Return empty array if no data
     }
 
-    // Assuming extData.cves is an array of objects, where each object has a 'platform' property.
-    // If extData.cves is string[], this will FAIL. This needs to be addressed if that's the case.
     const cveObjects = extData.cves;
 
     if (selectedPlatforms.length > 0 && cveObjects) {
@@ -75,7 +73,7 @@ const Desconhecidas: React.FC = () => {
           cve.platform && selectedPlatforms.includes(cve.platform.toLowerCase())
       );
     }
-    return cveObjects; // Return all if no platforms selected or if cveObjects is null/undefined
+    return cveObjects;
   }, [extData, selectedPlatforms]);
 
   const handleRegister = async (cveId: string) => {
