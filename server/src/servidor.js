@@ -1,15 +1,15 @@
+require('dotenv').config();
 const http = require('http');
-const app = require('./app'); // Importa a instância configurada do Express
+const app = require('./app');
 const { portaHttp } = require('./config/ambiente');
 const { iniciarServidorWebSocket } = require('./config/websocket.config');
 
-// Cria o servidor HTTP usando a aplicação Express
 const servidorHttp = http.createServer(app);
 
-// Inicia o servidor WebSocket, anexando-o ao servidor HTTP
 const wss = iniciarServidorWebSocket(servidorHttp);
 
 servidorHttp.listen(portaHttp, () => {
+  console.log(process.env);
   console.log(`Servidor HTTP rodando em http://localhost:${portaHttp}`);
   console.log(
     `Servidor WebSocket também disponível (compartilhando a porta ${portaHttp} com HTTP).`
@@ -30,7 +30,6 @@ servidorHttp.listen(portaHttp, () => {
   );
 });
 
-// Lidar com o encerramento gracioso (opcional, mas bom para produção)
 process.on('SIGTERM', () => {
   console.info('Sinal SIGTERM recebido. Fechando servidor HTTP e WebSocket...');
   wss.close(() => {
