@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import './App.css'
+// import './App.css'; // This line is now removed
 import Inicio from './pages/layout'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';

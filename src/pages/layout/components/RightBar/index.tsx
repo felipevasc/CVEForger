@@ -1,26 +1,20 @@
-import { Box, Tab, Tabs } from '@mui/material';
+import { Box, Tab, Tabs, Paper, useTheme, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
 import type { RightBarMenuItemType } from '../../../../store/navegacao/types/RightBarMenuItemType';
 import useNavegacaoStore from '../../../../store/navegacao/useNavegacaoStore';
 
 const RightBar = () => {
+  const theme = useTheme();
   const { menu } = useNavegacaoStore();
   const { rightBarMenuItems } = menu;
   const [activeTabIndex, setActiveTabIndex] = useState<number | false>(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    // Call the item's action
     if (rightBarMenuItems && rightBarMenuItems[newValue]) {
       rightBarMenuItems[newValue].actionOnClick();
     }
-    // Note: We are not setting activeTabIndex here based on click if isSelected is driving the tab state.
-    // If the actionOnClick is supposed to toggle selection and update the list,
-    // the useEffect below will handle setting the correct active tab.
-    // If not, and the tab should always change on click, then:
-    // setActiveTabIndex(newValue);
   };
 
-  // Update activeTabIndex if isSelected changes from an external source or after actionOnClick
   useEffect(() => {
     if (rightBarMenuItems) {
       const selectedIndex = rightBarMenuItems.findIndex(
@@ -33,47 +27,81 @@ const RightBar = () => {
   }, [rightBarMenuItems]);
 
   if (!rightBarMenuItems || rightBarMenuItems.length === 0) {
-    return <div className='right'></div>; // Render an empty div or a placeholder
+    // Pode retornar null ou um placeholder estilizado se a barra estiver vazia
+    return (
+      <Box sx={{ width: 240, p: 2, display: { xs: 'none', md: 'block' }, backgroundColor: theme.palette.background.paper }}>
+        <Typography variant="caption" sx={{ color: theme.palette.text.secondary }}>Nenhuma opção disponível.</Typography>
+      </Box>
+    );
   }
 
   return (
-    <div className='right'>
+    <Paper 
+      elevation={0} 
+      square 
+      sx={{ 
+        width: 240, // Largura fixa para a RightBar
+        height: '100%', // Ocupa toda a altura disponível
+        backgroundColor: theme.palette.background.paper,
+        borderLeft: `1px solid ${theme.palette.divider}`,
+        display: { xs: 'none', md: 'block' } // Esconder em telas pequenas, mostrar em médias e grandes
+      }}
+    >
       <Box
         sx={{
-          bgcolor: 'background.primary',
           width: '100%',
-          boxShadow: 'none',
+          height: '100%',
         }}>
         <Tabs
           value={activeTabIndex}
           onChange={handleChange}
-          aria-label='right bar dynamic tabs'
-          orientation='vertical'
-          variant='fullWidth' // This makes each tab take full width, icons and labels will be spaced out
-          textColor='inherit'
-          indicatorColor='primary'>
+          aria-label="abas de navegação da barra lateral direita"
+          orientation="vertical"
+          variant="scrollable" // Permite rolagem se houver muitos itens
+          scrollButtons="auto"
+          textColor="inherit"
+          indicatorColor="primary" // Usará a cor primária do tema para o indicador
+          sx={{
+            height: '100%',
+            '& .MuiTab-root': {
+              minHeight: 48, // Altura mínima para cada Tab
+              justifyContent: 'flex-start', // Alinha texto à esquerda
+              textAlign: 'left',
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2),
+              color: theme.palette.text.secondary,
+              textTransform: 'none', // Mantém a capitalização original do label
+              '&.Mui-selected': {
+                color: theme.palette.accentCyan.main, // Cor de destaque para item selecionado
+                backgroundColor: theme.palette.action.selected,
+              },
+              '&:hover': {
+                backgroundColor: theme.palette.action.hover,
+              }
+            },
+            '& .MuiTabs-indicator': {
+              backgroundColor: theme.palette.accentCyan.main, // Cor do indicador
+              left: 0, // Posiciona o indicador na borda esquerda
+            },
+          }}
+        >
           {rightBarMenuItems.map(
-            (
-              item: RightBarMenuItemType // Added type for item
-            ) => (
+            (item: RightBarMenuItemType) => (
               <Tab
                 key={item.id}
-                icon={''}
+                // icon={item.icon || undefined} // Adicionar ícone se disponível no tipo
+                // iconPosition="start"
                 label={item.label}
                 aria-label={item.label}
-                // To prevent click from directly changing tab if isSelected is the source of truth
-                // and actionOnClick updates isSelected, which then triggers useEffect.
-                // However, standard Tabs behavior is to change on click.
-                // If actionOnClick itself handles the "selection" logic and updates
-                // the list that feeds isSelected, then this explicit onClick here might be redundant
-                // or could conflict if not managed carefully with handleChange.
-                // For now, let's rely on handleChange to call actionOnClick.
+                sx={{
+                  justifyContent: 'flex-start', // Garante que o conteúdo do Tab (ícone + label) comece da esquerda
+                }}
               />
             )
           )}
         </Tabs>
       </Box>
-    </div>
+    </Paper>
   );
 };
 

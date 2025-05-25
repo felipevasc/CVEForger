@@ -50,6 +50,7 @@ export const ListagemCVEs: React.FC<ListagemCVEsProps> = ({
       action: (
         <Button
           variant='contained'
+          color='primary' // Make it use the primary accent color (hackerGreen)
           size='small'
           startIcon={
             registeringId === cve.cve ? (

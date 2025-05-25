@@ -93,7 +93,7 @@ export const PlatformIcon: React.FC<PlatformIconProps> = ({
   return (
     <Box display='flex' flexDirection='column' alignItems='center'>
       {icon}
-      <Typography variant='caption' sx={{ textTransform: 'none' }}>
+      <Typography variant='caption' sx={{ textTransform: 'none', color: 'text.secondary', mt: 0.5 }}>
         {platform}
       </Typography>
     </Box>

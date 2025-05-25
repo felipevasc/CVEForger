@@ -22,7 +22,7 @@ const ConfigMenu = () => {
         aria-controls={open ? 'account-menu' : undefined}
         aria-haspopup='true'
         aria-expanded={open ? 'true' : undefined}>
-        <Settings color='warning' />
+        <Settings sx={{ color: 'text.secondary' }} /> {/* Changed color here */}
       </IconButton>
       <Menu
         anchorEl={anchorEl}
