@@ -1,3 +1,5 @@
+import type { RightBarMenuItemType } from './RightBarMenuItemType'; // Import the new type
+
 type MenuType = {
     get: boolean;
     toogle: () => void;
@@ -13,4 +15,6 @@ export type MenuStoreType = {
         getElemento: HTMLElement | null
     };
     menuInferior: MenuType;
+    rightBarMenuItems?: RightBarMenuItemType[]; // Add this line
+    setRightBarMenuItems?: (items: RightBarMenuItemType[]) => void; // Add this line
 }

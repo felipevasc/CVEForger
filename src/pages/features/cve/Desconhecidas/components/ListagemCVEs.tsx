@@ -3,10 +3,18 @@ import { Button, CircularProgress, Link as MuiLink } from '@mui/material';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import Table, { type Column } from '../../../../../components/Table';
 
+// Define a type for clarity, or use the generic one
+interface CveObjectType { 
+  id: string;
+  platform: string; 
+  // any other properties that might exist
+  [key: string]: any;
+}
+
 interface ListagemCVEsProps {
-  items: string[];
+  items: CveObjectType[]; // Use the new type
   registeringId: string | null;
-  onRegister: (item: string) => void;
+  onRegister: (itemId: string) => void; // Parameter changed
 }
 
 export const ListagemCVEs: React.FC<ListagemCVEsProps> = ({
@@ -15,14 +23,14 @@ export const ListagemCVEs: React.FC<ListagemCVEsProps> = ({
   onRegister,
 }) => {
   // Prepara os dados para o componente genérico
-  const data = items.slice(0, 100).map((cve) => ({
+  const data = items.slice(0, 100).map((cveItem) => ({ // cveItem is now an object
     'Id da CVE': (
       <MuiLink
-        href={`https://nvd.nist.gov/vuln/detail/${cve}`}
+        href={`https://nvd.nist.gov/vuln/detail/${cveItem.id}`} // Use cveItem.id
         target='_blank'
         rel='noopener noreferrer'
         underline='hover'>
-        {cve}
+        {cveItem.id} // Use cveItem.id
       </MuiLink>
     ),
     Ação: (
@@ -30,16 +38,16 @@ export const ListagemCVEs: React.FC<ListagemCVEsProps> = ({
         variant='contained'
         size='small'
         startIcon={
-          registeringId === cve ? (
+          registeringId === cveItem.id ? ( // Use cveItem.id
             <CircularProgress size={16} color='inherit' />
           ) : (
             <AddTaskIcon />
           )
         }
-        onClick={() => onRegister(cve)}
-        disabled={registeringId === cve}
+        onClick={() => onRegister(cveItem.id)} // Use cveItem.id
+        disabled={registeringId === cveItem.id} // Use cveItem.id
         sx={{ minWidth: 120 }}>
-        {registeringId === cve ? 'Regist...' : 'Registrar'}
+        {registeringId === cveItem.id ? 'Regist...' : 'Registrar'} // Use cveItem.id
       </Button>
     ),
   }));
