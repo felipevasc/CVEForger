@@ -3,7 +3,7 @@ import { Button, CircularProgress, Link as MuiLink } from '@mui/material';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import Table, { type Column } from '../../../../../components/Table';
 import type { CveResponse } from '../../../../../api/backendApi/types/CveExploitDBResponse';
-import { PlatformIcon } from '../../../../../components/PlatformIcon';
+import { PlatformIcon } from '../../../../../components/PlataformIcon';
 
 interface ListagemCVEsProps {
   items: CveResponse[];

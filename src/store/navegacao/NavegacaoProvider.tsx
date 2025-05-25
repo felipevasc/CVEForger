@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react"; // Added useState
 import { NavegacaoContext, type NavegacaoContextType } from "./NavegacaoContext";
+import type { RightBarMenuItemType } from './types/RightBarMenuItemType'; // Added import
 import useMensagensHandler from "./handlers/MensagensHandler";
 import useLoadingHandler from "./handlers/LoadingHandler";
 import useUrlApiHandler from "./handlers/UrlApiHandler";
@@ -8,6 +9,7 @@ import useMenuHandler from "./handlers/MenuHandler";
 
 
 const NavegacaoProvider: React.FC<ProviderProps> = ({ children }) => {
+  const [rightBarMenuItems, setRightBarMenuItems] = useState<RightBarMenuItemType[]>([]); // Added state
   const mensagensHandler = useMensagensHandler();
   const loadingHandler = useLoadingHandler();
   const urlApiHandler = useUrlApiHandler();
@@ -18,9 +20,13 @@ const NavegacaoProvider: React.FC<ProviderProps> = ({ children }) => {
       loading: loadingHandler,
       urlApi: urlApiHandler,
       mensagens: mensagensHandler,
-      menu: menuHandler,
+      menu: {
+        ...menuHandler, // Spread existing menuHandler properties
+        rightBarMenuItems: rightBarMenuItems, // Added property
+        setRightBarMenuItems: setRightBarMenuItems, // Added property
+      },
     }),
-    [loadingHandler, urlApiHandler, mensagensHandler, menuHandler]
+    [loadingHandler, urlApiHandler, mensagensHandler, menuHandler, rightBarMenuItems] // Added rightBarMenuItems to dependency array
   );
 
   return (
