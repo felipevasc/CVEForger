@@ -1,7 +1,7 @@
 import { Box, Tab, Tabs } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { useNavegacaoStore } from '../../../../store/navegacao/useNavegacaoStore';
 import type { RightBarMenuItemType } from '../../../../store/navegacao/types/RightBarMenuItemType';
+import useNavegacaoStore from '../../../../store/navegacao/useNavegacaoStore';
 
 const RightBar = () => {
   const { menu } = useNavegacaoStore();
@@ -23,7 +23,9 @@ const RightBar = () => {
   // Update activeTabIndex if isSelected changes from an external source or after actionOnClick
   useEffect(() => {
     if (rightBarMenuItems) {
-      const selectedIndex = rightBarMenuItems.findIndex(item => item.isSelected);
+      const selectedIndex = rightBarMenuItems.findIndex(
+        (item) => item.isSelected
+      );
       setActiveTabIndex(selectedIndex !== -1 ? selectedIndex : false);
     } else {
       setActiveTabIndex(false);
@@ -37,7 +39,11 @@ const RightBar = () => {
   return (
     <div className='right'>
       <Box
-        sx={{ bgcolor: 'background.primary', width: '100%', boxShadow: 'none' }}>
+        sx={{
+          bgcolor: 'background.primary',
+          width: '100%',
+          boxShadow: 'none',
+        }}>
         <Tabs
           value={activeTabIndex}
           onChange={handleChange}
@@ -46,21 +52,25 @@ const RightBar = () => {
           variant='fullWidth' // This makes each tab take full width, icons and labels will be spaced out
           textColor='inherit'
           indicatorColor='primary'>
-          {rightBarMenuItems.map((item: RightBarMenuItemType) => ( // Added type for item
-            <Tab 
-              key={item.id} 
-              icon={item.icon} 
-              label={item.label} 
-              aria-label={item.label}
-              // To prevent click from directly changing tab if isSelected is the source of truth
-              // and actionOnClick updates isSelected, which then triggers useEffect.
-              // However, standard Tabs behavior is to change on click.
-              // If actionOnClick itself handles the "selection" logic and updates
-              // the list that feeds isSelected, then this explicit onClick here might be redundant
-              // or could conflict if not managed carefully with handleChange.
-              // For now, let's rely on handleChange to call actionOnClick.
-            />
-          ))}
+          {rightBarMenuItems.map(
+            (
+              item: RightBarMenuItemType // Added type for item
+            ) => (
+              <Tab
+                key={item.id}
+                icon={''}
+                label={item.label}
+                aria-label={item.label}
+                // To prevent click from directly changing tab if isSelected is the source of truth
+                // and actionOnClick updates isSelected, which then triggers useEffect.
+                // However, standard Tabs behavior is to change on click.
+                // If actionOnClick itself handles the "selection" logic and updates
+                // the list that feeds isSelected, then this explicit onClick here might be redundant
+                // or could conflict if not managed carefully with handleChange.
+                // For now, let's rely on handleChange to call actionOnClick.
+              />
+            )
+          )}
         </Tabs>
       </Box>
     </div>

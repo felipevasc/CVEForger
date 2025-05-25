@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Container, Paper, CssBaseline } from '@mui/material';
 import { FilterList as FilterListIcon } from '@mui/icons-material'; // Added
-import { useNavegacaoStore } from '../../../../store/navegacao/useNavegacaoStore'; // Added
 import type { RightBarMenuItemType } from '../../../../store/navegacao/types/RightBarMenuItemType'; // Added
 import { PainelResumo } from './components/PainelResumo';
 import { ListagemCVEs } from './components/ListagemCVEs';
 import useBackendApi from '../../../../api/backendApi';
 import type { CveExpoitDBResponse } from '../../../../api/backendApi/types/CveExploitDBResponse';
+import useNavegacaoStore from '../../../../store/navegacao/useNavegacaoStore';
 
 const Desconhecidas: React.FC = () => {
   const api = useBackendApi();
@@ -15,7 +15,10 @@ const Desconhecidas: React.FC = () => {
   const { setRightBarMenuItems } = menu; // Added
 
   // Define Mock Platforms:
-  const MOCK_PLATFORMS = useMemo(() => ['windows', 'linux', 'macos', 'android', 'ios', 'network gear'], []); // Updated to lowercase
+  const MOCK_PLATFORMS = useMemo(
+    () => ['windows', 'linux', 'macos', 'android', 'ios', 'network gear'],
+    []
+  ); // Updated to lowercase
 
   // State for Selected Platforms:
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]); // Added
@@ -28,20 +31,23 @@ const Desconhecidas: React.FC = () => {
 
   // Effect to Set/Update RightBar Menu Items:
   useEffect(() => {
-    if (setRightBarMenuItems) { // Check if handler is available
-      const platformItems: RightBarMenuItemType[] = MOCK_PLATFORMS.map((platform) => ({
-        id: `platform-${platform}`,
-        label: platform,
-        icon: <FilterListIcon />, // Use a consistent icon for now
-        actionOnClick: () => {
-          setSelectedPlatforms(prev =>
-            prev.includes(platform)
-              ? prev.filter(p => p !== platform)
-              : [...prev, platform]
-          );
-        },
-        isSelected: selectedPlatforms.includes(platform),
-      }));
+    if (setRightBarMenuItems) {
+      // Check if handler is available
+      const platformItems: RightBarMenuItemType[] = MOCK_PLATFORMS.map(
+        (platform) => ({
+          id: `platform-${platform}`,
+          label: platform,
+          icon: <FilterListIcon />, // Use a consistent icon for now
+          actionOnClick: () => {
+            setSelectedPlatforms((prev) =>
+              prev.includes(platform)
+                ? prev.filter((p) => p !== platform)
+                : [...prev, platform]
+            );
+          },
+          isSelected: selectedPlatforms.includes(platform),
+        })
+      );
       setRightBarMenuItems(platformItems);
     }
 
@@ -61,11 +67,12 @@ const Desconhecidas: React.FC = () => {
 
     // Assuming extData.cves is an array of objects, where each object has a 'platform' property.
     // If extData.cves is string[], this will FAIL. This needs to be addressed if that's the case.
-    const cveObjects = extData.cves as Array<{ id: string; platform: string; [key: string]: any }>; // Type assertion
+    const cveObjects = extData.cves;
 
     if (selectedPlatforms.length > 0 && cveObjects) {
-      return cveObjects.filter(cve =>
-        cve.platform && selectedPlatforms.includes(cve.platform.toLowerCase())
+      return cveObjects.filter(
+        (cve) =>
+          cve.platform && selectedPlatforms.includes(cve.platform.toLowerCase())
       );
     }
     return cveObjects; // Return all if no platforms selected or if cveObjects is null/undefined
