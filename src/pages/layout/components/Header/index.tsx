@@ -1,4 +1,14 @@
-import { AppBar, Box, IconButton, Toolbar, Typography, Tabs, Tab, useTheme, useMediaQuery } from '@mui/material';
+import {
+  AppBar,
+  Box,
+  IconButton,
+  Toolbar,
+  Typography,
+  Tabs,
+  Tab,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material';
 import { MenuOpenTwoTone } from '@mui/icons-material';
 import { useState } from 'react';
 import useNavegacaoStore from '../../../../store/navegacao/useNavegacaoStore';
@@ -27,51 +37,65 @@ const Header = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar 
-        position="static" 
-        sx={{ 
-          backgroundColor: theme.palette.background.paper, 
+      <AppBar
+        position='static'
+        sx={{
+          backgroundColor: theme.palette.background.paper,
           color: theme.palette.text.primary,
-          boxShadow: `0 2px 4px -1px ${theme.palette.primary.dark}` // Sombra sutil com cor do tema
-        }}
-      >
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', px: { xs: 1, sm: 2 } }}>
+          boxShadow: `0 2px 4px -1px ${theme.palette.primary.dark}`, // Sombra sutil com cor do tema
+        }}>
+        <Toolbar
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            px: { xs: 1, sm: 2 },
+          }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="abrir menu lateral"
+              size='large'
+              edge='start'
+              color='inherit'
+              aria-label='abrir menu lateral'
               sx={{ mr: 1 }}
-              onClick={() => menu.menuEsquerdo.open()}
-            >
+              onClick={() => menu.menuEsquerdo.open()}>
               <MenuOpenTwoTone sx={{ color: theme.palette.accentGreen.main }} />
             </IconButton>
             <img
               src={logo}
-              alt="Logo CVE Forger"
-              style={{ 
-                width: isMobile ? 60 : 90,  // Tamanho do logo ajustado
+              alt='Logo CVE Forger'
+              style={{
+                width: isMobile ? 60 : 60, // Tamanho do logo ajustado
                 height: 'auto',
                 maxHeight: isMobile ? 35 : 50, // Altura máxima do logo
-                marginRight: theme.spacing(isMobile ? 1 : 2) 
+                marginRight: theme.spacing(isMobile ? 1 : 2),
               }}
             />
             {!isMobile && (
-              <Typography variant="h5" component="div" sx={{ fontWeight: 'bold', color: theme.palette.text.primary }}>
+              <Typography
+                variant='h5'
+                component='div'
+                sx={{ fontWeight: 'bold', color: theme.palette.text.primary }}>
                 CVE Forger
               </Typography>
             )}
           </Box>
 
           {!isMobile && (
-            <Box sx={{ alignSelf: 'flex-end', flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
+            <Box
+              sx={{
+                alignSelf: 'flex-end',
+                flexGrow: 1,
+                display: 'flex',
+                justifyContent: 'center',
+              }}>
               <Tabs
                 value={currentTab}
                 onChange={handleTabChange}
-                variant="scrollable"
-                scrollButtons="auto"
-                aria-label="abas de navegação principais"
+                variant='scrollable'
+                scrollButtons='auto'
+                aria-label='abas de navegação principais'
                 sx={{
                   '& .MuiTab-root': {
                     color: theme.palette.text.secondary,
@@ -84,8 +108,7 @@ const Header = () => {
                   '& .MuiTabs-indicator': {
                     backgroundColor: theme.palette.accentGreen.main, // Cor do indicador
                   },
-                }}
-              >
+                }}>
                 {navigationTabs.map((tab) => (
                   <Tab key={tab.label} label={tab.label} />
                 ))}
@@ -100,9 +123,9 @@ const Header = () => {
           <Tabs
             value={currentTab}
             onChange={handleTabChange}
-            variant="scrollable" // Permite rolagem em telas menores
-            scrollButtons="auto" // Mostra botões de rolagem se necessário
-            aria-label="abas de navegação principais mobile"
+            variant='scrollable' // Permite rolagem em telas menores
+            scrollButtons='auto' // Mostra botões de rolagem se necessário
+            aria-label='abas de navegação principais mobile'
             sx={{
               width: '100%',
               borderTop: `1px solid ${theme.palette.divider}`,
@@ -119,8 +142,7 @@ const Header = () => {
               '& .MuiTabs-indicator': {
                 backgroundColor: theme.palette.accentGreen.main,
               },
-            }}
-          >
+            }}>
             {navigationTabs.map((tab) => (
               <Tab key={tab.label} label={tab.label} />
             ))}

@@ -143,7 +143,7 @@ export const techTheme = createTheme({
         },
         notchedOutline: {
           borderColor: textSecondaryDark,
-        }
+        },
       },
     },
     MuiInputLabel: {

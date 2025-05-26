@@ -5,10 +5,9 @@ import {
   HelpOutline as HelpOutlineIcon,
   ExitToApp as ExitToAppIcon,
   Security as SecurityIcon,
-  Description as DescriptionIcon,
-  Typography // Import Typography
+  Description as DescriptionIcon
 } from "@mui/icons-material";
-import { Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, useTheme } from "@mui/material";
+import { Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, useTheme } from "@mui/material";
 // Corrected import path for useNavegacaoStore
 import useNavegacaoStore from "../../../../store/navegacao/useNavegacaoStore";
 
