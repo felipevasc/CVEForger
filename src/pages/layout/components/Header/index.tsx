@@ -10,30 +10,47 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { MenuOpenTwoTone } from '@mui/icons-material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Added useEffect
+import { useNavigate, useLocation } from 'react-router-dom'; // Added
 import useNavegacaoStore from '../../../../store/navegacao/useNavegacaoStore';
 import ConfigMenu from './ConfigMenu';
 import logo from '../../../../assets/cveforger.png';
+
+const navigationTabs = [
+  { label: 'Realizar PoC', path: '/realizar-poc' },
+  { label: 'Buscar CVE', path: '/buscar-cve' },
+  { label: 'Implementar CVE', path: '/implementar-cve' },
+  { label: 'Montar PoC', path: '/montar-poc' },
+];
+
+// Helper to map path to tab index
+const pathToTabIndex = (path: string): number => {
+  const index = navigationTabs.findIndex(tab => tab.path === path);
+  return index === -1 ? 0 : index; // Default to 0 or a specific default tab index
+};
+
 
 const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { menu } = useNavegacaoStore();
-  const [currentTab, setCurrentTab] = useState(0);
+  const navigate = useNavigate(); // Added
+  const location = useLocation(); // Added
+
+  // Set currentTab based on location.pathname
+  const [currentTab, setCurrentTab] = useState(pathToTabIndex(location.pathname));
+
+  // Effect to update tab when location changes (e.g., browser back/forward)
+  useEffect(() => {
+    setCurrentTab(pathToTabIndex(location.pathname));
+  }, [location.pathname]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue);
-    // Aqui você pode adicionar lógica para navegar para diferentes seções/páginas
-    // com base na aba selecionada.
-    // Ex: if (newValue === 0) router.push('/realizar-poc');
+    if (navigationTabs[newValue]) {
+      navigate(navigationTabs[newValue].path);
+    }
   };
-
-  const navigationTabs = [
-    { label: 'Realizar PoC' },
-    { label: 'Buscar CVE' },
-    { label: 'Implementar CVE' },
-    { label: 'Montar PoC' },
-  ];
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -42,7 +59,7 @@ const Header = () => {
         sx={{
           backgroundColor: theme.palette.background.paper,
           color: theme.palette.text.primary,
-          boxShadow: `0 2px 4px -1px ${theme.palette.primary.dark}`, // Sombra sutil com cor do tema
+          boxShadow: `0 2px 4px -1px ${theme.palette.primary.dark}`,
         }}>
         <Toolbar
           sx={{
@@ -66,9 +83,9 @@ const Header = () => {
               src={logo}
               alt='Logo CVE Forger'
               style={{
-                width: isMobile ? 60 : 60, // Tamanho do logo ajustado
+                width: isMobile ? 60 : 60,
                 height: 'auto',
-                maxHeight: isMobile ? 35 : 50, // Altura máxima do logo
+                maxHeight: isMobile ? 35 : 50,
                 marginRight: theme.spacing(isMobile ? 1 : 2),
               }}
             />
@@ -100,13 +117,13 @@ const Header = () => {
                   '& .MuiTab-root': {
                     color: theme.palette.text.secondary,
                     fontWeight: 500,
-                    minWidth: 120, // Largura mínima para cada aba
+                    minWidth: 120,
                     '&.Mui-selected': {
-                      color: theme.palette.accentGreen.main, // Cor da aba selecionada
+                      color: theme.palette.accentGreen.main,
                     },
                   },
                   '& .MuiTabs-indicator': {
-                    backgroundColor: theme.palette.accentGreen.main, // Cor do indicador
+                    backgroundColor: theme.palette.accentGreen.main,
                   },
                 }}>
                 {navigationTabs.map((tab) => (
@@ -123,8 +140,8 @@ const Header = () => {
           <Tabs
             value={currentTab}
             onChange={handleTabChange}
-            variant='scrollable' // Permite rolagem em telas menores
-            scrollButtons='auto' // Mostra botões de rolagem se necessário
+            variant='scrollable'
+            scrollButtons='auto'
             aria-label='abas de navegação principais mobile'
             sx={{
               width: '100%',
@@ -132,9 +149,9 @@ const Header = () => {
               backgroundColor: theme.palette.background.paper,
               '& .MuiTab-root': {
                 color: theme.palette.text.secondary,
-                fontSize: '0.8rem', // Fonte menor para abas mobile
-                minWidth: 'auto', // Permite que as abas sejam mais estreitas
-                flexGrow: 1, // Distribui o espaço igualmente
+                fontSize: '0.8rem',
+                minWidth: 'auto',
+                flexGrow: 1,
                 '&.Mui-selected': {
                   color: theme.palette.accentGreen.main,
                 },
