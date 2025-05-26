@@ -55,21 +55,23 @@ const Table: React.FC<TableProps> = ({
   }, [columns, data]);
 
   return (
-    <Paper elevation={3} sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Paper elevation={3} sx={{ display: 'flex', flexDirection: 'column', backgroundImage: 'none' }}> {/* backgroundImage: 'none' to ensure paper color is applied */}
       {title && (
-        <Box sx={{ p: 2, borderBottom: '1px solid', flex: '0 0 auto' }}>
-          <Typography variant='h6'>{title}</Typography>
+        <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider', flex: '0 0 auto' }}> {/* Use theme divider color */}
+          <Typography variant='h6' sx={{color: 'text.primary'}}>{title}</Typography> {/* Ensure title uses primary text color */}
         </Box>
       )}
       <TableContainer sx={{ maxHeight, flex: '1 1 auto' }}>
         <MuiTable stickyHeader={stickyHeader} sx={{ minWidth }}>
           <TableHead>
+            {/* TableHead styling is primarily handled by theme overrides (MuiTableHead) */}
             <TableRow>
               {cols.map((col) => (
                 <TableCell
                   key={col.field}
                   align={col.align}
-                  style={col.width ? { width: col.width } : undefined}>
+                  sx={{ width: col.width }} // Use sx for consistency if preferred
+                >
                   {col.headerName ?? col.field}
                 </TableCell>
               ))}
@@ -77,14 +79,26 @@ const Table: React.FC<TableProps> = ({
           </TableHead>
           <TableBody>
             {data.map((row, idx) => (
-              <TableRow hover key={idx}>
+              <TableRow 
+                hover 
+                key={idx} 
+                sx={{ 
+                  '&:nth-of-type(odd)': {
+                    backgroundColor: 'action.hover', // Subtle striping for rows, uses theme's hover color
+                  },
+                  '&:last-child td, &:last-child th': { 
+                    border: 0 // Remove border for the last row
+                  } 
+                }}
+              >
                 {cols.map((col) => {
                   const value = row[col.field];
                   return (
                     <TableCell
                       key={col.field}
                       align={col.align}
-                      style={col.width ? { width: col.width } : undefined}>
+                      sx={{ width: col.width, color: 'text.secondary' }} // Use secondary text color for body cells for less emphasis
+                    >
                       {col.render ? col.render(value, row) : value}
                     </TableCell>
                   );

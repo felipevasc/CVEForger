@@ -3,7 +3,8 @@ import { Button, CircularProgress, Link as MuiLink } from '@mui/material';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import Table, { type Column } from '../../../../../components/Table';
 import type { CveResponse } from '../../../../../api/backendApi/types/CveExploitDBResponse';
-import { PlatformIcon } from '../../../../../components/PlataformIcon';
+import { PlatformIcon } from '../../../../../components/PlatformIcon';
+
 
 interface ListagemCVEsProps {
   items: CveResponse[];
@@ -50,6 +51,7 @@ export const ListagemCVEs: React.FC<ListagemCVEsProps> = ({
       action: (
         <Button
           variant='contained'
+          color='primary' // Make it use the primary accent color (hackerGreen)
           size='small'
           startIcon={
             registeringId === cve.cve ? (

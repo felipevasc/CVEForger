@@ -1,0 +1,22 @@
+import BottomBar from "./components/BottomBar"
+import Content from "./components/Content"
+import Header from "./components/Header"
+import LeftBar from "./components/LeftBar"
+import RightBar from "./components/RightBar"
+import TopBar from "./components/TopBar"
+import './styles.css'
+
+const Inicio = () => {
+    return <div className="app">
+        <Header />
+        <TopBar />
+        <LeftBar />
+        <div className="center">
+            <Content />
+            <RightBar />
+        </div>
+        <BottomBar />
+    </div>
+}
+
+export default Inicio
